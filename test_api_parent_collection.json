@@ -1,0 +1,51 @@
+{
+  "info": {
+    "_postman_id": "parent-collection-id-001",
+    "name": "Test API Parent Collection",
+    "description": "Parent collection for Test API. Contains global variables, authorization, and scripts. Import this first, then import endpoint category collections as folders.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://learning-teal-prepared.ngrok-free.app", "type": "string" },
+    { "key": "auth_token", "value": "ft_test_api_2024", "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [ { "key": "token", "value": "{{auth_token}}", "type": "string" } ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global pre-request script",
+          "if (!pm.variables.get('test_org_id')) pm.variables.set('test_org_id', 'ORG001');",
+          "if (!pm.variables.get('test_user_id')) pm.variables.set('test_user_id', 'USER001_001');",
+          "if (!pm.variables.get('test_profile_id')) pm.variables.set('test_profile_id', 'PROF001_001');"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test script",
+          "pm.test('Response time is acceptable', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    { "name": "Organizations (import test_api_organizations.json)" },
+    { "name": "Users (import test_api_users.json)" },
+    { "name": "Profiles (import test_api_profiles.json)" },
+    { "name": "Batch Operations (import test_api_batch.json)" },
+    { "name": "Statistics (import test_api_stats.json)" },
+    { "name": "Advanced Search (import test_api_search.json)" },
+    { "name": "Health & Version (import test_api_health_version.json)" }
+  ]
+} 

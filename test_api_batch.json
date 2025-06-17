@@ -1,0 +1,68 @@
+{
+  "info": {
+    "_postman_id": "batch-collection-id-001",
+    "name": "Batch Operations",
+    "description": "All endpoints for batch operations in Test API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Batch Create Organizations",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"operations\": [\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch Org 1\",\n        \"type\": \"test\"\n      }\n    },\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch Org 2\",\n        \"type\": \"test\"\n      }\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/batch/organizations",
+          "host": ["{{base_url}}"],
+          "path": ["api", "batch", "organizations"]
+        },
+        "description": "Create multiple organizations in batch."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Batch orgs created', function () { pm.expect(pm.response.json()).to.have.property('results'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Batch Create Users",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"operations\": [\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch User 1\",\n        \"email\": \"batch1@example.com\",\n        \"organization_id\": \"ORG001\"\n      }\n    },\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch User 2\",\n        \"email\": \"batch2@example.com\",\n        \"organization_id\": \"ORG001\"\n      }\n    }\n  ]\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/batch/users",
+          "host": ["{{base_url}}"],
+          "path": ["api", "batch", "users"]
+        },
+        "description": "Create multiple users in batch."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Batch users created', function () { pm.expect(pm.response.json()).to.have.property('results'); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+} 

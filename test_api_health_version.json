@@ -1,0 +1,91 @@
+{
+  "info": {
+    "_postman_id": "healthver-collection-id-001",
+    "name": "Health & Version",
+    "description": "All endpoints for health, version, and root in Test API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Root API Info",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/",
+          "host": ["{{base_url}}"],
+          "path": [""]
+        },
+        "description": "Get basic API information and available endpoints."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('API info object exists', function () { pm.expect(pm.response.json()).to.have.property('api'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/health?dummy=1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "health"],
+          "query": [
+            { "key": "dummy", "value": "1", "disabled": true }
+          ]
+        },
+        "description": "Check API health status."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Health status exists', function () { pm.expect(pm.response.json()).to.have.property('status'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Version",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/version?dummy=1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "version"],
+          "query": [
+            { "key": "dummy", "value": "1", "disabled": true }
+          ]
+        },
+        "description": "Get API version information."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Version info exists', function () { pm.expect(pm.response.json()).to.have.property('version'); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+} 

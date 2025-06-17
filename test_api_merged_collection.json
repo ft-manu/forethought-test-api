@@ -1,0 +1,916 @@
+{
+  "info": {
+    "_postman_id": "parent-collection-id-001",
+    "name": "Test API Parent Collection",
+    "description": "Parent collection for Test API. Contains global variables, authorization, and scripts. Import this first, then import endpoint category collections as folders.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://learning-teal-prepared.ngrok-free.app",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "ft_test_api_2024",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global pre-request script",
+          "if (!pm.variables.get('test_org_id')) pm.variables.set('test_org_id', 'ORG001');",
+          "if (!pm.variables.get('test_user_id')) pm.variables.set('test_user_id', 'USER001_001');",
+          "if (!pm.variables.get('test_profile_id')) pm.variables.set('test_profile_id', 'PROF001_001');"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Global test script",
+          "pm.test('Response time is acceptable', function () {",
+          "    pm.expect(pm.response.responseTime).to.be.below(1000);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Organizations",
+      "description": "",
+      "item": [
+        {
+          "name": "List Organizations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/organizations?page=1&per_page=10&name=test&type=test",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "organizations"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "name",
+                  "value": "test",
+                  "disabled": true
+                },
+                {
+                  "key": "type",
+                  "value": "test",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "List all organizations with pagination and filtering."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Organizations array exists', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create Organization",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Organization\",\n  \"type\": \"test\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/organizations",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "organizations"
+              ]
+            },
+            "description": "Create a new organization."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 201', function () { pm.response.to.have.status(201); });",
+                  "pm.test('Organization created', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Organization",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/organizations/:org_id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "organizations",
+                ":org_id"
+              ],
+              "variable": [
+                {
+                  "key": "org_id",
+                  "value": "ORG001"
+                }
+              ]
+            },
+            "description": "Get organization details including users."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Organization has users', function () { pm.expect(pm.response.json()).to.have.property('users'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Organization",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Organization\",\n  \"type\": \"test\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/organizations/:org_id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "organizations",
+                ":org_id"
+              ],
+              "variable": [
+                {
+                  "key": "org_id",
+                  "value": "ORG001"
+                }
+              ]
+            },
+            "description": "Update organization details."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Organization updated', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete Organization",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/organizations/:org_id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "organizations",
+                ":org_id"
+              ],
+              "variable": [
+                {
+                  "key": "org_id",
+                  "value": "ORG001"
+                }
+              ]
+            },
+            "description": "Delete an organization."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Users",
+      "description": "",
+      "item": [
+        {
+          "name": "List Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users?page=1&per_page=10&name=test&email=test@example.com&organization_id=ORG001",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "name",
+                  "value": "test",
+                  "disabled": true
+                },
+                {
+                  "key": "email",
+                  "value": "test@example.com",
+                  "disabled": true
+                },
+                {
+                  "key": "organization_id",
+                  "value": "ORG001",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "List all users with pagination and filtering."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Users array exists', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"organization_id\": \"ORG001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users"
+              ]
+            },
+            "description": "Create a new user."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 201', function () { pm.response.to.have.status(201); });",
+                  "pm.test('User created', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/:user_id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                ":user_id"
+              ],
+              "variable": [
+                {
+                  "key": "user_id",
+                  "value": "USER001_001"
+                }
+              ]
+            },
+            "description": "Get user details including organization."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('User has organization', function () { pm.expect(pm.response.json()).to.have.property('organization'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update User",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated User\",\n  \"email\": \"updated@example.com\",\n  \"organization_id\": \"ORG001\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/users/:user_id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                ":user_id"
+              ],
+              "variable": [
+                {
+                  "key": "user_id",
+                  "value": "USER001_001"
+                }
+              ]
+            },
+            "description": "Update user details."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('User updated', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Delete User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/users/:user_id",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "users",
+                ":user_id"
+              ],
+              "variable": [
+                {
+                  "key": "user_id",
+                  "value": "USER001_001"
+                }
+              ]
+            },
+            "description": "Delete a user."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 204', function () { pm.response.to.have.status(204); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Profiles",
+      "description": "",
+      "item": [
+        {
+          "name": "List Profiles",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/profiles?page=1&per_page=10&id=PROF001_001",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profiles"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "id",
+                  "value": "PROF001_001",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "List all profiles with pagination and filtering."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Profiles array exists', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/profiles/{{test_profile_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profiles",
+                "{{test_profile_id}}"
+              ]
+            },
+            "description": "Get profile details."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Profile has id', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": \"Updated Profile Data\",\n  \"metadata\": {\n    \"updated_at\": \"2024-01-01T00:00:00Z\",\n    \"version\": \"1.0.1\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/profiles/{{test_profile_id}}",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "profiles",
+                "{{test_profile_id}}"
+              ]
+            },
+            "description": "Update profile details."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Profile updated', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Batch Operations",
+      "description": "",
+      "item": [
+        {
+          "name": "Batch Create Organizations",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operations\": [\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch Org 1\",\n        \"type\": \"test\"\n      }\n    },\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch Org 2\",\n        \"type\": \"test\"\n      }\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/batch/organizations",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "batch",
+                "organizations"
+              ]
+            },
+            "description": "Create multiple organizations in batch."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Batch orgs created', function () { pm.expect(pm.response.json()).to.have.property('results'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Batch Create Users",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"operations\": [\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch User 1\",\n        \"email\": \"batch1@example.com\",\n        \"organization_id\": \"ORG001\"\n      }\n    },\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch User 2\",\n        \"email\": \"batch2@example.com\",\n        \"organization_id\": \"ORG001\"\n      }\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/batch/users",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "batch",
+                "users"
+              ]
+            },
+            "description": "Create multiple users in batch."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Batch users created', function () { pm.expect(pm.response.json()).to.have.property('results'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Statistics",
+      "description": "",
+      "item": [
+        {
+          "name": "Get Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/stats?dummy=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "stats"
+              ],
+              "query": [
+                {
+                  "key": "dummy",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get system-wide statistics."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Statistics object exists', function () { pm.expect(pm.response.json()).to.have.property('organizations'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Advanced Search",
+      "description": "",
+      "item": [
+        {
+          "name": "Advanced Search",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/search/advanced?type=all&filters={\"name\":\"test\"}&page=1&per_page=10",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "search",
+                "advanced"
+              ],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "all",
+                  "disabled": true
+                },
+                {
+                  "key": "filters",
+                  "value": "{\"name\":\"test\"}",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "per_page",
+                  "value": "10",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Advanced search across all entities with complex filters."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Search results array exists', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health & Version",
+      "description": "",
+      "item": [
+        {
+          "name": "Root API Info",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                ""
+              ]
+            },
+            "description": "Get basic API information and available endpoints."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('API info object exists', function () { pm.expect(pm.response.json()).to.have.property('api'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/health?dummy=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "health"
+              ],
+              "query": [
+                {
+                  "key": "dummy",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Check API health status."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Health status exists', function () { pm.expect(pm.response.json()).to.have.property('status'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Version",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/version?dummy=1",
+              "host": [
+                "{{base_url}}"
+              ],
+              "path": [
+                "api",
+                "version"
+              ],
+              "query": [
+                {
+                  "key": "dummy",
+                  "value": "1",
+                  "disabled": true
+                }
+              ]
+            },
+            "description": "Get API version information."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Version info exists', function () { pm.expect(pm.response.json()).to.have.property('version'); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

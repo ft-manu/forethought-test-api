@@ -1,0 +1,45 @@
+{
+  "status": "success",
+  "data": {
+    "users": [
+      {
+        "id": 1,
+        "name": "John Doe",
+        "email": "john@example.com",
+        "role": "admin",
+        "status": "active",
+        "organization": {
+          "id": "ORG001",
+          "name": "Alpha Corp"
+        }
+      },
+      {
+        "id": 2,
+        "name": "Jane Smith",
+        "email": "jane@example.com",
+        "role": "user",
+        "status": "inactive",
+        "organization": {
+          "id": "ORG002",
+          "name": "Beta Inc"
+        }
+      },
+      {
+        "id": 3,
+        "name": "Bob Wilson",
+        "email": "bob@example.com",
+        "role": "manager",
+        "status": "active",
+        "organization": {
+          "id": "ORG001",
+          "name": "Alpha Corp"
+        }
+      }
+    ],
+    "metadata": {
+      "total_users": 3,
+      "active_users": 2,
+      "inactive_users": 1
+    }
+  }
+} 

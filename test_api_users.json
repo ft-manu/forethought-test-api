@@ -1,0 +1,158 @@
+{
+  "info": {
+    "_postman_id": "users-collection-id-001",
+    "name": "Users",
+    "description": "All endpoints for managing users in Test API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "List Users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/users?page=1&per_page=10&name=test&email=test@example.com&organization_id=ORG001",
+          "host": ["{{base_url}}"],
+          "path": ["api", "users"],
+          "query": [
+            { "key": "page", "value": "1", "disabled": true },
+            { "key": "per_page", "value": "10", "disabled": true },
+            { "key": "name", "value": "test", "disabled": true },
+            { "key": "email", "value": "test@example.com", "disabled": true },
+            { "key": "organization_id", "value": "ORG001", "disabled": true }
+          ]
+        },
+        "description": "List all users with pagination and filtering."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Users array exists', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create User",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"New User\",\n  \"email\": \"newuser@example.com\",\n  \"organization_id\": \"ORG001\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/users",
+          "host": ["{{base_url}}"],
+          "path": ["api", "users"]
+        },
+        "description": "Create a new user."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () { pm.response.to.have.status(201); });",
+              "pm.test('User created', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get User",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/users/:user_id",
+          "host": ["{{base_url}}"],
+          "path": ["api", "users", ":user_id"],
+          "variable": [
+            { "key": "user_id", "value": "USER001_001" }
+          ]
+        },
+        "description": "Get user details including organization."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('User has organization', function () { pm.expect(pm.response.json()).to.have.property('organization'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update User",
+      "request": {
+        "method": "PUT",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated User\",\n  \"email\": \"updated@example.com\",\n  \"organization_id\": \"ORG001\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/users/:user_id",
+          "host": ["{{base_url}}"],
+          "path": ["api", "users", ":user_id"],
+          "variable": [
+            { "key": "user_id", "value": "USER001_001" }
+          ]
+        },
+        "description": "Update user details."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('User updated', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete User",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/users/:user_id",
+          "host": ["{{base_url}}"],
+          "path": ["api", "users", ":user_id"],
+          "variable": [
+            { "key": "user_id", "value": "USER001_001" }
+          ]
+        },
+        "description": "Delete a user."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 204', function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+} 

@@ -1,0 +1,7 @@
+flask==3.0.2
+flask-compress==1.14
+flask-limiter==3.5.0
+flask-caching==2.1.0
+gunicorn==21.2.0
+pytest==7.4.3
+locust==2.17.0 

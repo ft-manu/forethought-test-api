@@ -1,0 +1,642 @@
+{
+	"info": {
+		"_postman_id": "test-api-comprehensive-2024",
+		"name": "Test API - Comprehensive Collection",
+		"description": "Complete RESTful API collection for organizations, users, and profiles with OpenAPI documentation. All endpoints require Bearer token authentication except health, version, and docs endpoints.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "ft_test_api_2024",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://learning-teal-prepared.ngrok-free.app",
+			"type": "string"
+		},
+		{
+			"key": "bearerToken",
+			"value": "ft_test_api_2024",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "Health & System",
+			"item": [
+				{
+					"name": "Root - API Info",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/",
+							"host": ["{{baseUrl}}"],
+							"path": [""]
+						},
+						"description": "Get API information and available endpoints"
+					}
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "health"]
+						},
+						"description": "Check API health status"
+					}
+				},
+				{
+					"name": "Version Info",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/version",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "version"]
+						},
+						"description": "Get API version information"
+					}
+				}
+			],
+			"description": "System health and information endpoints"
+		},
+		{
+			"name": "Documentation",
+			"item": [
+				{
+					"name": "OpenAPI Specification",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/openapi.json",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "openapi.json"]
+						},
+						"description": "Get OpenAPI 3.0 specification in JSON format"
+					}
+				},
+				{
+					"name": "Swagger UI Documentation",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/docs",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "docs"]
+						},
+						"description": "Access interactive Swagger UI documentation"
+					}
+				}
+			],
+			"description": "API documentation endpoints"
+		},
+		{
+			"name": "Organizations",
+			"item": [
+				{
+					"name": "List Organizations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/organizations?page=1&per_page=10&name=&type=",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "organizations"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number for pagination (default: 1). Examples: page=1 (first page), page=2 (second page), page=5 (fifth page). Use with per_page to control pagination.",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "10",
+									"description": "Number of items per page (default: 10, max: 100). Examples: per_page=5 (5 items), per_page=20 (20 items), per_page=50 (50 items). Controls how many organizations are returned in each page.",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"description": "Filter organizations by name (partial match, case-insensitive). Examples: name=Acme (finds 'Acme Corp', 'Acme Industries'), name=Test (finds 'Test Org', 'Testing Company'), name=Microsoft (finds organizations with 'Microsoft' in name).",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "",
+									"description": "Filter organizations by exact type. Valid values: 'test', 'enterprise', 'startup', 'nonprofit', 'government'. Examples: type=enterprise (only enterprise orgs), type=startup (only startups), type=test (only test orgs).",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get paginated list of organizations with optional filters. Returns organizations with metadata, user counts, and supports filtering by name (partial match) and type (exact match). Supports pagination with page/per_page parameters. Example usage: Filter by type=enterprise to get only enterprise organizations, or name=Test to find organizations with 'Test' in their name."
+					}
+				},
+				{
+					"name": "Create Organization",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"New Test Organization\",\n  \"type\": \"enterprise\",\n  \"metadata\": {\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\",\n    \"version\": \"1.0.0\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/organizations",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "organizations"]
+						},
+						"description": "Create a new organization with comprehensive validation. Required fields: 'name' (1-100 chars), 'type' (test/enterprise/startup/nonprofit/government). Optional: 'id' (ORG### format), 'metadata'. Validates uniqueness of ID and enforces type constraints. Returns 201 Created on success with full organization data including auto-generated metadata."
+					}
+				},
+				{
+					"name": "Get Organization by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/organizations/:org_id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "organizations", ":org_id"],
+							"variable": [
+								{
+									"key": "org_id",
+									"value": "ORG001",
+									"description": "Organization ID"
+								}
+							]
+						},
+						"description": "Get specific organization by ID with related user data. Returns organization details including all associated users, user count, and complete metadata. Use organization IDs in format ORG### (e.g., ORG001, ORG123). Returns 404 if organization not found."
+					}
+				},
+				{
+					"name": "Update Organization",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Organization Name\",\n  \"type\": \"updated_type\",\n  \"metadata\": {\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\",\n    \"version\": \"1.1.0\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/organizations/:org_id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "organizations", ":org_id"],
+							"variable": [
+								{
+									"key": "org_id",
+									"value": "ORG001",
+									"description": "Organization ID to update"
+								}
+							]
+						},
+						"description": "Update an existing organization with validation. Supports partial updates - only provide fields you want to change. Validates 'name' (1-100 chars), 'type' (valid enum values), automatically updates 'updated_at' timestamp. Returns updated organization data. Use organization IDs like ORG001, ORG002, etc."
+					}
+				},
+				{
+					"name": "Delete Organization",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/organizations/:org_id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "organizations", ":org_id"],
+							"variable": [
+								{
+									"key": "org_id",
+									"value": "ORG001",
+									"description": "Organization ID to delete"
+								}
+							]
+						},
+						"description": "Delete an organization permanently. Returns 204 No Content on successful deletion. WARNING: This action cannot be undone. Consider the impact on related users before deletion. Use organization IDs in format ORG### (e.g., ORG001). Returns 404 if organization not found."
+					}
+				}
+			],
+			"description": "Organization management endpoints"
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users?page=1&per_page=10&name=&email=&organization_id=",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number for pagination (default: 1). Examples: page=1 (first page), page=3 (third page), page=10 (tenth page). Use with per_page to navigate through user results.",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "10",
+									"description": "Number of users per page (default: 10, max: 100). Examples: per_page=5 (5 users), per_page=25 (25 users), per_page=50 (50 users). Controls pagination size.",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"description": "Filter users by name (partial match, case-insensitive). Examples: name=John (finds 'John Doe', 'Johnny Smith'), name=Smith (finds 'John Smith', 'Jane Smith'), name=Admin (finds users with 'Admin' in name).",
+									"disabled": true
+								},
+								{
+									"key": "email",
+									"value": "",
+									"description": "Filter users by email (partial match, case-insensitive). Examples: email=gmail.com (all Gmail users), email=john (finds john@example.com, johnny@test.com), email=@company.com (all company domain users).",
+									"disabled": true
+								},
+								{
+									"key": "organization_id",
+									"value": "",
+									"description": "Filter users by exact organization ID. Examples: organization_id=ORG001 (users in ORG001), organization_id=ORG123 (users in ORG123). Use organization IDs like ORG001, ORG002, etc.",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get paginated list of users with comprehensive filtering options. Returns users with their organization data and metadata. Supports filtering by name (partial), email (partial), and organization_id (exact). Pagination via page/per_page. Examples: Filter by email=gmail.com for Gmail users, organization_id=ORG001 for users in specific org, name=John for users named John."
+					}
+				},
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"New Test User\",\n  \"email\": \"newuser@example.com\",\n  \"organization_id\": \"ORG001\",\n  \"metadata\": {\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\",\n    \"version\": \"1.0.0\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						},
+						"description": "Create a new user with comprehensive validation. Required fields: 'name' (1-100 chars), 'email' (valid format, must be unique). Optional: 'id' (USER### format), 'organization_id' (must exist). Validates email uniqueness across all users, organization existence, and field formats. Auto-generates profile_id. Returns 201 Created with complete user data."
+					}
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/:user_id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", ":user_id"],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "USER001_001",
+									"description": "User ID"
+								}
+							]
+						},
+						"description": "Get specific user by ID with complete organization data. Returns user details including associated organization object, profile information, and metadata. Use user IDs in format USER### (e.g., USER001, USER123). Returns 404 if user not found. Organization data included automatically if user belongs to an organization."
+					}
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated User Name\",\n  \"email\": \"updated@example.com\",\n  \"organization_id\": \"ORG002\",\n  \"metadata\": {\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\",\n    \"version\": \"1.1.0\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/:user_id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", ":user_id"],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "USER001_001",
+									"description": "User ID to update"
+								}
+							]
+						},
+						"description": "Update an existing user with validation. Supports partial updates - only provide fields to change. Validates email uniqueness (excluding current user), organization existence, field formats. Automatically updates 'updated_at' timestamp. Use user IDs like USER001. Returns updated user data with organization info."
+					}
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/:user_id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", ":user_id"],
+							"variable": [
+								{
+									"key": "user_id",
+									"value": "USER001_001",
+									"description": "User ID to delete"
+								}
+							]
+						},
+						"description": "Delete a user permanently. Returns 204 No Content on successful deletion. WARNING: This action cannot be undone and will remove all user data including associated profile references. Use user IDs in format USER### (e.g., USER001). Returns 404 if user not found."
+					}
+				}
+			],
+			"description": "User management endpoints"
+		},
+		{
+			"name": "Profiles",
+			"item": [
+				{
+					"name": "List Profiles",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles?page=1&per_page=10&name=",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "profiles"],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number for pagination (default: 1). Examples: page=1 (first page), page=2 (second page), page=7 (seventh page). Use with per_page to navigate through profile results.",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "10",
+									"description": "Number of profiles per page (default: 10, max: 100). Examples: per_page=5 (5 profiles), per_page=15 (15 profiles), per_page=30 (30 profiles). Controls pagination size.",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "",
+									"description": "Filter profiles by name (partial match, case-insensitive). Examples: name=Admin (finds 'Admin Profile', 'Administrator'), name=User (finds 'User Profile', 'Basic User'), name=Manager (finds profiles with 'Manager' in name).",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Get paginated list of profiles with optional filters"
+					}
+				},
+				{
+					"name": "Get Profile by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/:profile_id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "profiles", ":profile_id"],
+							"variable": [
+								{
+									"key": "profile_id",
+									"value": "PROF001_001",
+									"description": "Profile ID"
+								}
+							]
+						},
+						"description": "Get specific profile by ID"
+					}
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Profile Name\",\n  \"metadata\": {\n    \"created_at\": \"2024-01-01T00:00:00Z\",\n    \"updated_at\": \"2024-01-01T00:00:00Z\",\n    \"version\": \"1.1.0\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/profiles/:profile_id",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "profiles", ":profile_id"],
+							"variable": [
+								{
+									"key": "profile_id",
+									"value": "PROF001_001",
+									"description": "Profile ID to update"
+								}
+							]
+						},
+						"description": "Update an existing profile"
+					}
+				}
+			],
+			"description": "Profile management endpoints"
+		},
+		{
+			"name": "Batch Operations",
+			"item": [
+				{
+					"name": "Batch Organizations",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"operations\": [\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch Organization 1\",\n        \"type\": \"batch_test\",\n        \"metadata\": {\n          \"created_at\": \"2024-01-01T00:00:00Z\",\n          \"updated_at\": \"2024-01-01T00:00:00Z\",\n          \"version\": \"1.0.0\"\n        }\n      }\n    },\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch Organization 2\",\n        \"type\": \"batch_test\",\n        \"metadata\": {\n          \"created_at\": \"2024-01-01T00:00:00Z\",\n          \"updated_at\": \"2024-01-01T00:00:00Z\",\n          \"version\": \"1.0.0\"\n        }\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/batch/organizations",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "batch", "organizations"]
+						},
+						"description": "Batch create organizations"
+					}
+				},
+				{
+					"name": "Batch Users",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"operations\": [\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch User 1\",\n        \"email\": \"batchuser1@example.com\",\n        \"organization_id\": \"ORG001\",\n        \"metadata\": {\n          \"created_at\": \"2024-01-01T00:00:00Z\",\n          \"updated_at\": \"2024-01-01T00:00:00Z\",\n          \"version\": \"1.0.0\"\n        }\n      }\n    },\n    {\n      \"action\": \"create\",\n      \"data\": {\n        \"name\": \"Batch User 2\",\n        \"email\": \"batchuser2@example.com\",\n        \"organization_id\": \"ORG002\",\n        \"metadata\": {\n          \"created_at\": \"2024-01-01T00:00:00Z\",\n          \"updated_at\": \"2024-01-01T00:00:00Z\",\n          \"version\": \"1.0.0\"\n        }\n      }\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/batch/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "batch", "users"]
+						},
+						"description": "Batch create users"
+					}
+				}
+			],
+			"description": "Batch operation endpoints"
+		},
+		{
+			"name": "Statistics & Search",
+			"item": [
+				{
+					"name": "Get Statistics",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/stats",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "stats"]
+						},
+						"description": "Get API usage statistics"
+					}
+				},
+				{
+					"name": "Advanced Search",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/search/advanced?q=&type=all&page=1&per_page=10&filters={}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "search", "advanced"],
+							"query": [
+								{
+									"key": "q",
+									"value": "",
+									"description": "Search query string to match across entity names and fields (optional, case-insensitive). Examples: q=test (finds entities with 'test' in name), q=john (finds users/profiles named John), q=enterprise (finds enterprise organizations), q=gmail (finds entities with gmail in email/name). Leave empty to get all entities.",
+									"disabled": true
+								},
+								{
+									"key": "type",
+									"value": "all",
+									"description": "Entity type to search (default: 'all'). Valid values: 'all' (search all entities), 'organizations' (only organizations), 'users' (only users), 'profiles' (only profiles). Examples: type=organizations (only search orgs), type=users (only search users), type=all (search everything).",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "1",
+									"description": "Page number for search results pagination (default: 1). Examples: page=1 (first page), page=2 (second page), page=5 (fifth page). Use with per_page to navigate through search results.",
+									"disabled": true
+								},
+								{
+									"key": "per_page",
+									"value": "10",
+									"description": "Number of search results per page (default: 10, max: 100). Examples: per_page=5 (5 results), per_page=20 (20 results), per_page=50 (50 results). Controls search result pagination size.",
+									"disabled": true
+								},
+								{
+									"key": "filters",
+									"value": "{}",
+									"description": "Advanced JSON filters for specific field matching (optional). Must be valid JSON object. Examples: filters={\"type\":\"enterprise\"} (only enterprise orgs), filters={\"organization_id\":\"ORG001\"} (users in ORG001), filters={\"email\":\"gmail.com\"} (users with gmail). Combine multiple: filters={\"type\":\"startup\",\"name\":\"tech\"}",
+									"disabled": true
+								}
+							]
+						},
+						"description": "Perform advanced search across all resources"
+					}
+				}
+			],
+			"description": "Statistics and search endpoints"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Set bearer token for authenticated requests",
+					"if (pm.request.auth && pm.request.auth.type === 'bearer') {",
+					"    pm.request.auth.bearer.token = pm.variables.get('bearerToken');",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Basic response validation",
+					"pm.test('Response status code is valid', function () {",
+					"    pm.expect(pm.response.code).to.be.oneOf([200, 201, 204, 400, 401, 404, 422]);",
+					"});",
+					"",
+					"// Check response time",
+					"pm.test('Response time is less than 2000ms', function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+					"});",
+					"",
+					"// Validate JSON response for successful requests",
+					"if (pm.response.code >= 200 && pm.response.code < 300) {",
+					"    pm.test('Response is valid JSON', function () {",
+					"        pm.response.to.have.jsonBody();",
+					"    });",
+					"}"
+				]
+			}
+		}
+	]
+} 

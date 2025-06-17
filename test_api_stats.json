@@ -1,0 +1,38 @@
+{
+  "info": {
+    "_postman_id": "stats-collection-id-001",
+    "name": "Statistics",
+    "description": "All endpoints for statistics in Test API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get Statistics",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/stats?dummy=1",
+          "host": ["{{base_url}}"],
+          "path": ["api", "stats"],
+          "query": [
+            { "key": "dummy", "value": "1", "disabled": true }
+          ]
+        },
+        "description": "Get system-wide statistics."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Statistics object exists', function () { pm.expect(pm.response.json()).to.have.property('organizations'); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+} 

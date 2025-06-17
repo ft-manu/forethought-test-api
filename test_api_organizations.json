@@ -1,0 +1,157 @@
+{
+  "info": {
+    "_postman_id": "org-collection-id-001",
+    "name": "Organizations",
+    "description": "All endpoints for managing organizations in Test API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "List Organizations",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/organizations?page=1&per_page=10&name=test&type=test",
+          "host": ["{{base_url}}"],
+          "path": ["api", "organizations"],
+          "query": [
+            { "key": "page", "value": "1", "disabled": true },
+            { "key": "per_page", "value": "10", "disabled": true },
+            { "key": "name", "value": "test", "disabled": true },
+            { "key": "type", "value": "test", "disabled": true }
+          ]
+        },
+        "description": "List all organizations with pagination and filtering."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Organizations array exists', function () { pm.expect(pm.response.json().items).to.be.an('array'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Create Organization",
+      "request": {
+        "method": "POST",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"New Organization\",\n  \"type\": \"test\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/organizations",
+          "host": ["{{base_url}}"],
+          "path": ["api", "organizations"]
+        },
+        "description": "Create a new organization."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 201', function () { pm.response.to.have.status(201); });",
+              "pm.test('Organization created', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Get Organization",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/organizations/:org_id",
+          "host": ["{{base_url}}"],
+          "path": ["api", "organizations", ":org_id"],
+          "variable": [
+            { "key": "org_id", "value": "ORG001" }
+          ]
+        },
+        "description": "Get organization details including users."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Organization has users', function () { pm.expect(pm.response.json()).to.have.property('users'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Update Organization",
+      "request": {
+        "method": "PUT",
+        "header": [ { "key": "Content-Type", "value": "application/json" } ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Updated Organization\",\n  \"type\": \"test\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/organizations/:org_id",
+          "host": ["{{base_url}}"],
+          "path": ["api", "organizations", ":org_id"],
+          "variable": [
+            { "key": "org_id", "value": "ORG001" }
+          ]
+        },
+        "description": "Update organization details."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Organization updated', function () { pm.expect(pm.response.json()).to.have.property('id'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Delete Organization",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/organizations/:org_id",
+          "host": ["{{base_url}}"],
+          "path": ["api", "organizations", ":org_id"],
+          "variable": [
+            { "key": "org_id", "value": "ORG001" }
+          ]
+        },
+        "description": "Delete an organization."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test('Status code is 204', function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+} 
